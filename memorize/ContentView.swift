@@ -8,33 +8,55 @@
 import SwiftUI
 
 struct ContentView: View {
+    var emojis = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+    @State var emojiCount = 5
     
     var body: some View {
-        HStack {
-            CardView(isFaceUp: true)
-            CardView(isFaceUp: false)
-            CardView(isFaceUp: true)
-            CardView(isFaceUp: true)
+        VStack{  // vertical stack
+            HStack {  // horizontal stack
+                ForEach(emojis[0..<emojiCount], id:\.self) { emoji in
+                    CardView(content: emoji)
+                }
+            }
+            HStack {
+                Button(action: {
+                    emojiCount -= 1
+                }, label: {
+                    Text("Remove Card")
+                })
+                
+                Spacer()
+                
+                Button(action: {
+                    emojiCount += 1
+                }, label: {
+                    Text("Add Card")
+                })
+            }
         }
-        
         .padding()
         .foregroundStyle(.orange)
     }
 }
 
+
 struct CardView: View {
-    var isFaceUp: Bool = true
+    @State var isFaceUp: Bool = true
+    var content: String
     var body: some View {
         ZStack {
+            let shape = RoundedRectangle(cornerRadius: 20)
             if (isFaceUp) {
-                RoundedRectangle(cornerRadius: 20)
-                    .strokeBorder(lineWidth: 3)
-                Text("🛜")
-                    .foregroundStyle(.blue)
+                shape.fill(Color.white)
+                shape.strokeBorder(lineWidth: 3)
+                Text(content).font(.largeTitle)
             } else {
-                RoundedRectangle(cornerRadius: 20)
+                shape
             }
             
+        }
+        .onTapGesture {
+                isFaceUp = !isFaceUp
         }
     }
 }
